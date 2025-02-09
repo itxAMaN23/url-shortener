@@ -1,0 +1,71 @@
+.navbar {
+    background-color: var(--primary-color);
+    padding: 1rem;
+    height: 80px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: white;
+    transition: opacity 0.3s ease;
+}
+
+.navbar-brand:hover {
+    opacity: 0.9;
+}
+
+.nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: white !important;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.nav-buttons .btn {
+    padding: 0.5rem 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.nav-buttons .btn-light {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    border: none;
+}
+
+.nav-buttons .btn-dark {
+    background: white;
+    color: var(--primary-color);
+    border: none;
+}
+
+.nav-buttons .btn:hover {
+    transform: translateY(-1px);
+    opacity: 0.95;
+}
+
+@media (max-width: 991px) {
+    .navbar-collapse {
+        background: var(--primary-color);
+        margin-top: 0.5rem;
+        padding: 1rem;
+        border-radius: 8px;
+    }
+
+    .nav-buttons {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+
+    .nav-buttons .btn {
+        flex: 1;
+    }
+}
