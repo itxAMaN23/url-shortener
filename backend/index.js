@@ -33,3 +33,5 @@ app.listen(PORT, () => {
     console.log(`Server started on port: ${PORT}`);
     connectDB();
 });
+
+module.exports = app;
