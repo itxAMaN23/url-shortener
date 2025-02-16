@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import axios from "axios";
 import './Main.css';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL
+
 const Main = () => {
 
   const [longUrl, setLongUrl] = useState('');
@@ -15,8 +17,8 @@ const Main = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await axios.post('http://localhost:3000/api/shorten', { originalURL: longUrl });
-      setShortUrl(`http://localhost:3000/api/${response.data.shortURL}`);
+      const response = await axios.post(`${API_BASE_URL}/api/shorten`, { originalURL: longUrl });
+      setShortUrl(`${API_BASE_URL}/api/${response.data.shortURL}`);
       setClicks(response.data.clicks || 0);
     } catch (error) {
       setError('Failed to shorten URL. Please try again.');

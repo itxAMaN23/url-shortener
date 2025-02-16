@@ -1,9 +1,9 @@
 import express from 'express';
-import urlRoutes from './routes/urlroutes.js'
-import analyticsRoutes from './routes/analyticsRoutes.js'
-import generateQrRoutes from './routes/generateQr.js'
+import urlRoutes from './routes/urlroutes.js';
+import analyticsRoutes from './routes/analyticsRoutes.js';
+import generateQrRoutes from './routes/generateQr.js';
 import connectDB from './connect.js';
-import cors from 'cors'
+import cors from 'cors';
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -14,14 +14,14 @@ app.use(express.json());
 app.use(cors());
 
 app.get('/', (req, res) => {
-    res.end('GET request.');
-})
+    res.send('API is running...');
+});
 
 app.use('/api', urlRoutes);
 app.use('/analytics', analyticsRoutes);
 app.use('/generate-qr', generateQrRoutes);
 
 app.listen(PORT, () => {
-    console.log(`Server started: ${PORT}`);
+    console.log(`Server started on port: ${PORT}`);
     connectDB();
-})
+});

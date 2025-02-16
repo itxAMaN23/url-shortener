@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
+import dotenv from "dotenv";
 
-const mongoURI = 'mongodb://127.0.0.1:27017/url-shortener';
+dotenv.config();
+const mongoURI = process.env.MONGO_URI;
 
 const connectDB = async () => {
     try {
@@ -13,3 +15,5 @@ const connectDB = async () => {
 };
 
 export default connectDB;
+
+// XKcKXPR1cIuS3xVG

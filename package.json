@@ -24,7 +24,8 @@
     "react-color": "^2.19.3",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.1.4",
-    "useragent": "^2.3.0"
+    "useragent": "^2.3.0",
+    "vercel": "^41.1.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

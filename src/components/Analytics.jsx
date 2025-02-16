@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 import "./Analytics.css";
 
+const API_BASE_URL = import.meta.env.VITE_API_URL;
+
 const Analytics = () => {
     const [analyticsData, setAnalyticsData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        fetch("http://localhost:3000/analytics")
+        fetch(`${API_BASE_URL}/analytics`)
             .then((res) => {
                 if (!res.ok) throw new Error("Failed to fetch data");
                 return res.json();

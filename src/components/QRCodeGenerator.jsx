@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./QRCodeGenerator.css";
 
+const API_BASE_URL = import.meta.env.VITE_API_URL;
+
 const QRCodeGenerator = () => {
     const [qrCodeText, setQrCodeText] = useState("");
     const [imageFormat, setImageFormat] = useState("PNG");
@@ -29,10 +31,10 @@ const QRCodeGenerator = () => {
         setLoading(true);
 
         try {
-            const response = await axios.post("http://localhost:3000/generate-qr", {
+            const response = await axios.post(`${API_BASE_URL}/generate-qr`, {
                 qr_code_text: qrCodeText,
                 image_format: imageFormat,
-                image_width: Math.max(100, Math.min(imageWidth, 800)), // Ensures range 100-800px
+                image_width: Math.max(100, Math.min(imageWidth, 800)),
                 foreground_color: foregroundColor,
                 background_color: backgroundColor,
                 qr_code_logo: VALID_LOGOS.includes(qrCodeLogo) ? qrCodeLogo : "no-logo",
