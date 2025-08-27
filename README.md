@@ -71,5 +71,5 @@ url-shortener/
 
 ## 🔗 Links
 
-- **Live Demo**: [View Live](#)
+- **Live Demo**: [View Live](https://url-shortener-blush-eight.vercel.app/)
 - **Repository**: [GitHub](https://github.com/itxAMaN23/url-shortener)
