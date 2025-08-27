@@ -2,6 +2,10 @@
 
 A modern, full-stack URL shortening application built with React and Node.js. Transform long URLs into short, shareable links with comprehensive analytics and QR code generation.
 
+## 📸 Screenshot
+
+<img width="1871" height="902" alt="image" src="https://github.com/user-attachments/assets/b1795e21-74c7-4f68-991e-869c60b4411c" />
+
 ## 🌟 Features
 
 - **URL Shortening**: Convert long URLs into short, manageable links
