@@ -2,7 +2,7 @@ import express from "express";
 import urlModel from "../models/url.js";
 import trackModel from "../models/track.js";
 import { nanoid } from "nanoid";
-import useragent from "useragent";
+import { UAParser } from "ua-parser-js";
 import geoip from "geoip-lite";
 
 const router = express.Router();
@@ -41,9 +41,9 @@ router.get("/:shortURL", async (req, res) => {
     }
 
     // Extract user agent details
-    const agent = useragent.parse(req.headers["user-agent"]);
-    const browser = agent.family;
-    const device = agent.device.family;
+    const parser = new UAParser(req.headers["user-agent"]);
+    const browser = parser.getBrowser().name || "Unknown";
+    const device = parser.getDevice().type || "Desktop";
 
     // Extract client IP address
     const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
