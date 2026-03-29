@@ -4,19 +4,24 @@ import analyticsRoutes from "./routes/analyticsRoutes.js";
 import generateQrRoutes from "./routes/generateQr.js";
 import connectDB from "./connect.js";
 import cors from "cors";
-import dotenv from "dotenv";
+import { rateLimit } from "express-rate-limit";
+import "dotenv/config";
 
-dotenv.config();
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 15,
+  message: { error: "Too many URLs created. Please try again later." },
+});
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // CORS Configuration
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
-  })
+  }),
 );
 
 // Body parsing middleware
@@ -40,8 +45,19 @@ app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
-app.use("/api", urlRoutes);
+app.use("/api", urlRoutes, limiter);
 app.use("/analytics", analyticsRoutes);
-app.use("/generate-qr", generateQrRoutes);
+app.use("/generate-qr", generateQrRoutes, limiter);
+
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+
+  console.error(`[${new Date().toISOString()}] ${err.stack}`);
+
+  res.status(statusCode).json({
+    success: false,
+    message: err.message || "Internal Server Error",
+  });
+});
 
 export default app;

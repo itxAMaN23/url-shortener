@@ -16,60 +16,69 @@ router.post("/shorten", async (req, res) => {
   }
 
   try {
+    new URL(originalURL);
+  } catch (err) {
+    return res.status(400).json({ error: "Invalid URL format" });
+  }
+
+  try {
     let url = await urlModel.findOne({ originalURL });
     if (url) {
-      res.json(url);
+      return res.status(200).json(url);
     } else {
       const shortURL = nanoid(8);
       url = new urlModel({ originalURL, shortURL });
       await url.save();
-      res.json(url);
+      return res.status(201).json(url);
     }
   } catch (error) {
-    console.error(error);
-    res.status(500).json("Server error");
+    console.error("Shorten Error:", error);
+    res.status(500).json({ error: "Server error, please try again later" });
   }
 });
 
 // Redirect to Original URL and Track Analytics
 router.get("/:shortURL", async (req, res) => {
   try {
-    const url = await urlModel.findOne({ shortURL: req.params.shortURL });
+    const { shortURL } = req.params;
+    const url = await urlModel.findOne({ shortURL });
 
-    if (!url) {
-      return res.status(404).json("URL not found");
-    }
+    if (!url) return res.status(404).send({ error: "URL not found" });
 
-    // Extract user agent details
+    // 1. Initialize parser FIRST
     const parser = new UAParser(req.headers["user-agent"]);
     const browser = parser.getBrowser().name || "Unknown";
     const device = parser.getDevice().type || "Desktop";
 
-    // Extract client IP address
-    const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+    // 2. Safe IP extraction
+    const xForwarded = req.headers["x-forwarded-for"];
+    const ip = xForwarded ? xForwarded.split(",")[0] : req.socket.remoteAddress;
 
-    // Extract geolocation details
     const geo = geoip.lookup(ip);
     const country = geo ? geo.country : "Unknown";
 
     // Store analytics in trackModel
-    await trackModel.create({
-      shortURL: url.shortURL, // Store only the shortURL string
-      clicks: 1, // Each visit counts as 1 click in analytics
-      browser,
-      device,
-      country,
-      ip, // Optionally store the IP for debugging
-    });
+    trackModel
+      .create({
+        shortURL, // Store only the shortURL string
+        clicks: 1, // Each visit counts as 1 click in analytics
+        browser,
+        device,
+        country,
+        ip, // Optionally store the IP for debugging
+      })
+      .catch((err) => console.error("Tracking Error:", err));
 
-    // Increment click count in urlModel
-    url.clicks++;
-    await url.save();
+    urlModel
+      .updateOne({ shortURL }, { $inc: { clicks: 1 } })
+      .catch((err) => console.error("Counter Error:", err));
 
     return res.redirect(url.originalURL);
   } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json("Server error");
+    console.error("Redirect Error:", error);
+    if (!res.headersSent) {
+      res.status(500).json({ error: "Server error" });
+    }
   }
 });
 

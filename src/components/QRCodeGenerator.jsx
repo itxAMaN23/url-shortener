@@ -50,7 +50,9 @@ const QRCodeGenerator = () => {
       }
     } catch (err) {
       console.error(err);
-      setError("Error generating QR Code. Check API key or subscription.");
+      const backendError =
+        err.response?.data?.error || "Error generating QR Code.";
+      setError(backendError);
     } finally {
       setLoading(false);
     }
@@ -178,10 +180,10 @@ const QRCodeGenerator = () => {
           <img src={qrCodeUrl} alt="QR Code" className="qr-image" />
           <a
             href={qrCodeUrl}
-            download={`QRCode.${imageFormat.toLowerCase()}`}
+            download={`qr-code-${Date.now()}.${imageFormat.toLowerCase()}`}
             className="btn-download"
           >
-            ⬇ Download
+            ⬇ Download {imageFormat}
           </a>
         </div>
       )}
